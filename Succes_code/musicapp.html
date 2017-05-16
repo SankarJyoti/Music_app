@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="musicApp">
+
+<head>
+     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head
+         content must come *after* these tags -->
+    <title>Music App</title>
+        <!-- Bootstrap -->
+       
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bower_components/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet"> 
+    <script src="jquery.js"></script>   
+    <script type="text/javascript" src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link href="../app/styles/bootstrap-social.css" rel="stylesheet">
+    <link href="../app/styles/mystyles.css" rel="stylesheet">
+    <style>
+      .wrapper {
+          font-family:'arial', sans-serif;
+      }
+      input.icon::-webkit-input-placeholder {
+          font-family:'FontAwesome';
+      };
+
+      th,td{
+        text-align:left;
+        padding:10px;
+      }
+      
+
+    </style>
+
+   
+</head>
+<body ng-controller="musicCtrl">
+    <div class="container">
+      <div class="row row-content" >
+         <div class="col-md-4 col-md-offset-4" style="padding:5px">
+              <center><h3><strong>Music Tracks</strong></h3></center>
+              <br><br>
+              <div class="md-form form-inline">
+                 <center> <p class="wrapper"><input type="text" class="form-control icon " ng-model="search.title" placeholder="&#61442; Search Music by title" >
+                    <button class="btn btn-primary btn-sm" ng-click="searchTrack()" data-toggle="modal" data-target="#newSongModal">Search</button></p><center>
+                    <div class="modal fade" id="newSongModal" role="dialog">
+                         <div class="modal-dialog">
+                              <div class="modal-content">
+                                   <div class="modal-header">
+                                       <button class="close" data-dismiss="modal">&times</button>
+                                       <center><h2>The searched track </h2></center>
+                                   </div>
+                                   <div class="modal-body">                                
+                                      <p><h4><i>Title</i> :<strong>{{singleSong.results[0].title}}</strong>,
+                                           <i> Genre</i> :<strong>{{singleSong.results[0].genres[0].name}}</strong>,
+                                            <i>Rating</i> :<strong>{{singleSong.results[0].rating}}</strong></h4></p>
+                                     <br>
+                                      <center><button class="btn btn-primary btn-md" ng-model="edit" ng-click="toggleDetails()">{{showDetails?'Cancel':'Edit track'}}</button></center>
+                                      <br><br>
+                                      <div ng-show="showDetails">
+                                          <form class="form-inline">
+                                             <label for="title">Title</label><input type="text" ng-model="singleSong.results[0].title" id="title">
+                                             <label for="genre">Genre</label><input type="text" ng-model="singleSong.results[0].genres[0].name" id="genre">
+                                             <label for="rating">Rating</label><input type="number" min="1" max="10" number-to-number ng-model="singleSong.results[0].rating" id="rating">
+                                             <br><br>
+                                             <center><button type="button" class="btn btn-success" ng-click="editTrack(singleSong.results[0].id,singleSong)" data-dismiss="modal">Save</button></center>
+                                          </form>
+                                      </div>
+                                   </div>
+                                   <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>                   
+              </div>
+         </div>
+         <br><br><br>
+         <div class="col-md-6 col-md-offset-3" style="border:2px solid;padding:0px">
+              <table class="table table-striped table-hover">
+                <thead>
+                </thead>
+                <tbody> 
+                  <tr ng-repeat=" result in tracks.results" >
+                     <td>{{result.title}}</td><td>{{result.rating}}</td>                             
+                  </tr>                  
+                </tbody>
+              </table>                                   
+         </div>
+         <br><br><br>
+          <div class="col-md-4 col-md-offset-4" style="padding:20px">
+            <center><button type="button" class="btn btn-primary btn-lg " data-toggle="modal" data-target="#myModal" >Add New Track</button></center>
+            <div class="modal fade" id="myModal" role="dialog">
+                 <div class="modal-dialog">
+                    <form class="form-inline">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button class="close" data-dismiss="modal">&times</button>
+                              <center><h3 style="color:lightgreen"><strong>Add a track</strong></h3></center>
+                          </div>
+                          <div class="modal-body">
+                              <center>
+                               <label for="input1">Title</label><input type="text" name="title" id="input1" ng-model="music.title" class="form-control"><br><br>                        
+                               <label for="input2">Genre</label><input type="text" name="genre" id="input2" ng-model="music.genre" class="form-control"><br><br>
+                               <label for="input3">Rating</label><input type="number" name="rating" ng-model="music.rating" class="form-control" min="1" max="10"><br><br>
+                               <center>
+                          </div>
+                          <div class="modal-footer">
+                               <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                               <button type="button" class="btn btn-success" data-dismiss="modal" ng-click="saveTrack()">Add</button>
+                          </div>
+                      </div>
+                    </form>
+                 </div>
+            </div>
+          </div>         
+      </div>
+    </div>  
+   
+    <center>
+        <nav>
+            <ul class="pagination pagination-lg pagination-blue">       
+                <li class="page-item active"><a class="page-link" href="musicapp.html">Page 1</a></li>
+                <li class="page-item"><a class="page-link" href="musicapp2.html">Page 2</a></li>              
+            </ul>
+        </nav> 
+    </center>
+
+  <script src="../bower_components/angular/angular.min.js"></script>
+  <script src="../bower_components/angular-resource/angular-resource.min.js"></script>
+  <script src="scripts/app.js"></script>
+  <script src="scripts/controller.js"></script>
+  <script src="scripts/services.js"></script>
+ 
+</body>
+</html>
